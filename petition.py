@@ -62,6 +62,23 @@ class AllSignatures(webapp2.RequestHandler):
         template = jinja_environment.get_template('allsignatures.html')
         self.response.out.write(template.render(template_values))
 
+class StatsPage(webapp2.RequestHandler):
+    def get(self):
+        template_values = {
+            'signatures': [],
+        }
+        signatures = db.GqlQuery("SELECT * "
+                                 "FROM Signature "
+                                 "WHERE ANCESTOR IS :1 "
+                                 "  AND activated = TRUE "
+                                 "ORDER BY date DESC",
+                                 KEY)
+        for signature in signatures:
+            template_values['signatures'].append(signature)
+
+        template = jinja_environment.get_template('stats.html')
+        self.response.out.write(template.render(template_values))
+
 def generate_activationkey():
     chars = string.ascii_letters
     return "".join(random.sample(chars, 8))
@@ -169,6 +186,7 @@ class ActivatePage(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
                                ('/', MainPage),
                                ('/sign', SignPage),
+                               ('/stats', StatsPage),
                                ('/activate', ActivatePage),
                                ('/allsignatures', AllSignatures)
                               ], debug=True)

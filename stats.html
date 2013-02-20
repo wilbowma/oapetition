@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+  <title>tear down this paywall</title>
+  <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+</head>
+<body>
+
+<h1><a href="/">ACM: tear down this paywall.</a></h1>
+
+<p class="big">We, the undersigned researchers, technologists and citizens,
+demand that the Association for Computing Machinery make the complete contents
+of the Digital Library available to everybody.</p>
+
+<p>As a result of not being Open Access, the ACM has lost:</p>
+{% set reviewers = 0 %}
+{% set researchers = 0 %}
+{% set members = 0 %}
+{% for signature in signatures %}
+{%   if signature.wontreview %}
+{%      set reviewers = reviewers + 1 %}
+{%   endif %}
+{%   if signature.wontpublish %}
+{%      set researchers = researchers + 1 %}
+{%   endif %}
+{%   if signature.wontjoin %}
+{%      set members = members + 1 %}
+{%   endif %}
+{% endfor %}
+<ul>
+  <!-- TODO: Use a different class -->
+  <li class="signer">{{ reviewers }} reviewers</li>
+  <li class="signer">{{ researchers }} researchers</li>
+  <li class="signer">{{ members }} members</li>
+</ul>
+
+<p><a href="/">[back to the front page]</a></p>
+</body>
+</html>
