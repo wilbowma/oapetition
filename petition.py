@@ -98,10 +98,16 @@ def send_confirmation_email(signature):
 ## simple check based on http://stackoverflow.com/questions/8022530/
 email_pat = re.compile(r"[^@]+@[^@]+\.[^@]+$")
 def validate_signature(name, email, affiliation, subfield):
+    emails = db.GqlQuery("SELECT __key__ "
+                         "FROM Signature "
+                         "WHERE email = :1 ",
+                         hashlib.md5(email).hexdigest())
     return (email_pat.match(email) and
             len(name) in range(1, 81) and
             len(affiliation) in range(81) and
-            len(subfield) in range(81))
+            len(subfield) in range(81) and
+            not emails.get(keys_only=True))
+    
 
 class SignPage(webapp2.RequestHandler):
     def get(self):
