@@ -3,6 +3,7 @@ import random
 import os
 import cgi
 import re
+import hashlib
 
 import webapp2
 import jinja2
@@ -131,8 +132,9 @@ class SignPage(webapp2.RequestHandler):
                               wontjoin = wontjoin,
                               activated = False,
                               activationkey = generate_activationkey())
-        signature.put()
         send_confirmation_email(signature)
+        signature.email = hashlib.md5(signature.email).hexdigest()
+        signature.put()
         self.redirect('/thanks')
 
 def activate_signature(signature_id, activationkey):
