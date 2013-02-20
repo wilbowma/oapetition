@@ -133,7 +133,7 @@ class SignPage(webapp2.RequestHandler):
                               activated = False,
                               activationkey = generate_activationkey())
         send_confirmation_email(signature)
-        signature.email = hashlib.md5(signature.email).hexdigest()
+        signature.email = hashlib.md5(email).hexdigest()
         signature.put()
         self.redirect('/thanks')
 
